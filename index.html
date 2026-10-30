@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Campus Voice</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Raise concerns anonymously, upvote the ones that matter, and follow what school management does about the top concern each cycle.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to concerns</a>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="#board" aria-label="Campus Voice home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="28" height="28"><rect x="3" y="14" width="6" height="15" rx="1.5" fill="currentColor"/><rect x="13" y="8" width="6" height="21" rx="1.5" fill="currentColor"/><rect x="23" y="3" width="6" height="26" rx="1.5" fill="var(--accent)"/></svg>
+      </span>
+      <span class="brand-text">
+        <span class="brand-name" id="brand-name">Campus Voice</span>
+        <span class="brand-school" id="brand-school">&nbsp;</span>
+      </span>
+    </a>
+    <nav class="topnav" aria-label="Main">
+      <a href="#board" data-nav="board">Concerns</a>
+      <a href="#how" data-nav="how">How it works</a>
+      <a href="#admin" data-nav="admin" id="nav-admin" hidden>Management</a>
+    </nav>
+    <div class="account" id="account"></div>
+  </div>
+</header>
+
+<div class="demo-banner" id="demo-banner" hidden>
+  <div class="wrap demo-inner">
+    <span><strong>Demo mode.</strong> Sample concerns, saved only in this browser. Connect Supabase in <code>js/config.js</code> to go live.</span>
+    <button class="linkish" id="demo-reset" type="button">Reset sample data</button>
+  </div>
+</div>
+
+<main id="main" tabindex="-1">
+  <!-- Board view -->
+  <section id="view-board" class="view">
+    <div class="cycle-band">
+      <div class="wrap cycle-inner" id="cycle-band"></div>
+    </div>
+
+    <div class="wrap">
+      <section class="commitments" aria-labelledby="commit-h">
+        <div class="section-head">
+          <h2 id="commit-h">What management is working on</h2>
+          <p class="section-sub">The top-voted concern from each cycle, with every update management has posted.</p>
+        </div>
+        <div class="commit-list" id="commit-list"></div>
+      </section>
+
+      <div class="board-grid">
+        <section class="board" aria-labelledby="board-h">
+          <div class="board-toolbar">
+            <h2 id="board-h" class="visually-hidden">Concerns</h2>
+            <div class="tabs" role="tablist" id="tabs">
+              <button role="tab" data-tab="top" aria-selected="true">Most voted</button>
+              <button role="tab" data-tab="new" aria-selected="false">Newest</button>
+              <button role="tab" data-tab="done" aria-selected="false">Resolved</button>
+              <button role="tab" data-tab="mine" aria-selected="false">Mine</button>
+            </div>
+            <div class="filters">
+              <label class="visually-hidden" for="f-search">Search concerns</label>
+              <input id="f-search" type="search" placeholder="Search concerns" autocomplete="off">
+              <label class="visually-hidden" for="f-cat">Category</label>
+              <select id="f-cat"><option value="">All categories</option></select>
+            </div>
+          </div>
+          <ol class="concern-list" id="concern-list" aria-live="polite"></ol>
+        </section>
+
+        <aside class="side">
+          <div class="raise">
+            <h2>Something not working?</h2>
+            <p>Check the list first. If someone already raised it, your vote counts more than a repeat post.</p>
+            <button class="btn btn-primary btn-block" id="open-post" type="button">Raise a concern</button>
+            <p class="raise-meta" id="posts-left"></p>
+          </div>
+          <div class="anon-card">
+            <h3><svg aria-hidden="true" viewBox="0 0 20 20" width="16" height="16"><path d="M10 1.5 3 4.5v5c0 4.2 3 7.6 7 9 4-1.4 7-4.8 7-9v-5l-7-3Z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg> Your name is never attached</h3>
+            <ul>
+              <li>Posts store no name, email or account.</li>
+              <li>Posts show the date only, never the time.</li>
+              <li>Votes are counted with a scrambled code, not your identity.</li>
+              <li>Management sees exactly what students see.</li>
+            </ul>
+            <a href="#how">How anonymity works</a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section id="view-how" class="view" hidden>
+    <div class="wrap prose-wrap">
+      <h1>How Campus Voice works</h1>
+      <p class="lede">Students raise concerns and vote on them. At the end of every cycle, management commits to the most-voted concern and posts updates until it is resolved.</p>
+
+      <ol class="steps">
+        <li><h3>Raise or upvote</h3><p>Sign in with your school email. Before posting, the site shows similar concerns so you can add your vote instead of repeating them. Each student gets a small number of posts per day.</p></li>
+        <li><h3>Votes decide</h3><p>One student, one vote per concern. You can take your vote back while voting is open.</p></li>
+        <li><h3>Cycle closes</h3><p>When the cycle ends (monthly or per semester), the top-voted open concern is picked automatically. Management cannot choose a different one.</p></li>
+        <li><h3>Follow the action</h3><p>Management posts updates on the committed concern: in progress, resolved, or declined with a reason. Everyone can see the full history.</p></li>
+      </ol>
+
+      <h2 id="anonymity">Anonymity</h2>
+      <p>Signing in proves you are a student. It does not label what you write.</p>
+      <ul class="plain">
+        <li><strong>No author on posts.</strong> A concern is saved with its title, details, category and date. There is no column for who wrote it.</li>
+        <li><strong>No timestamps on posts.</strong> Only the day is saved, and post IDs are random, so a post cannot be matched to the moment someone signed in.</li>
+        <li><strong>Votes use a one-way code.</strong> To stop double voting, each vote is stored with a scrambled code made from your account and a secret key. The key is locked away from the website and the management dashboard, so votes cannot be traced back to a student.</li>
+        <li><strong>Management has no special view.</strong> The management dashboard shows the same posts students see, plus tools to post updates and hide posts that break the rules.</li>
+      </ul>
+      <p class="note">Keep your own post anonymous too: avoid details that identify you, and do not name individual staff or students. Posts that do may be hidden.</p>
+    </div>
+  </section>
+
+  <!-- Management -->
+  <section id="view-admin" class="view" hidden>
+    <div class="wrap" id="admin-root"></div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <span id="foot-name">Campus Voice</span>
+    <span>Anonymous by design · <a href="#how">How it works</a></span>
+  </div>
+</footer>
+
+<!-- Dialogs -->
+<dialog id="dlg-signin" class="dlg" aria-labelledby="signin-h">
+  <form method="dialog" class="dlg-x"><button aria-label="Close">×</button></form>
+  <div id="signin-body"></div>
+</dialog>
+
+<dialog id="dlg-post" class="dlg dlg-wide" aria-labelledby="post-h">
+  <form method="dialog" class="dlg-x"><button aria-label="Close">×</button></form>
+  <h2 id="post-h">Raise a concern</h2>
+  <form id="post-form" novalidate>
+    <div class="field">
+      <label for="p-title">Short title</label>
+      <input id="p-title" maxlength="120" required placeholder="e.g. No water in Block C hostel in the mornings" autocomplete="off">
+      <div class="hint"><span id="p-title-count">0</span>/120 · at least 8 characters</div>
+    </div>
+    <div class="similar" id="similar" hidden>
+      <p class="similar-h">Already raised? Add your vote instead of posting again.</p>
+      <ul id="similar-list"></ul>
+    </div>
+    <div class="field">
+      <label for="p-cat">Category</label>
+      <select id="p-cat" required></select>
+    </div>
+    <div class="field">
+      <label for="p-body">Details <span class="opt">(optional)</span></label>
+      <textarea id="p-body" maxlength="2000" rows="5" placeholder="What happens, where, and how it affects students. Avoid naming individuals."></textarea>
+    </div>
+    <p class="anon-inline"><svg aria-hidden="true" viewBox="0 0 20 20" width="14" height="14"><path d="M10 1.5 3 4.5v5c0 4.2 3 7.6 7 9 4-1.4 7-4.8 7-9v-5l-7-3Z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg> Posted anonymously. Your name and email are not saved with this concern.</p>
+    <p class="form-error" id="post-error" role="alert" hidden></p>
+    <div class="dlg-actions">
+      <button type="button" class="btn" data-close>Cancel</button>
+      <button type="submit" class="btn btn-primary" id="post-submit">Post anonymously</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="dlg-detail" class="dlg dlg-wide" aria-labelledby="detail-title">
+  <form method="dialog" class="dlg-x"><button aria-label="Close">×</button></form>
+  <div id="detail-body"></div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="js/config.js"></script>
+<script src="js/api-demo.js"></script>
+<script src="js/api-supabase.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
